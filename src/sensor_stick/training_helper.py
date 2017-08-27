@@ -95,7 +95,7 @@ def initial_setup():
 
 def spawn_model(model_name):
     """ Spawns a model in front of the RGBD camera.
-    
+    d
         Args: None
         
         Returns: None
@@ -111,6 +111,11 @@ def spawn_model(model_name):
 
     with open (model_path + model_name + '/model.sdf', 'r') as xml_file:
         model_xml = xml_file.read().replace('\n', '')
+
+    try:
+        delete_model()
+    except:
+        print('No model to delete.')
 
     spawn_model_prox = rospy.ServiceProxy('gazebo/spawn_sdf_model', SpawnModel)
     spawn_model_prox('training_model', model_xml, '', initial_pose, 'world')
