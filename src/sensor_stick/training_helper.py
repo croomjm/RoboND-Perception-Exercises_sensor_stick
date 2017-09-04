@@ -126,4 +126,3 @@ def delete_model():
     # Delete the old model if it's stil around
     delete_model_prox = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
     delete_model_prox('training_model')
-
