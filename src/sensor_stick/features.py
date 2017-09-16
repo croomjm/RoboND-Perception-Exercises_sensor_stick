@@ -9,7 +9,20 @@ def rgb_to_hsv(rgb_list):
     hsv_normalized = matplotlib.colors.rgb_to_hsv([[rgb_normalized]])[0][0]
     return hsv_normalized
 
-def return_normalized_hist(features, bins_range, nbins = 32):
+def rgb_to_YCbCr(rgb_list):
+    r, g, b = rgb_list
+
+    Y = 16 + (65.738*r + 129.057*g + 25.064*b)/256.
+    Cb = 128 +  (-37.945*r - 74.203*g + 112.0*b)/256.
+    Cr = 128 + (112.0*r - 93.786*g + 18.214*b)/256.
+
+    YCbCr = [Y, Cb, Cr]
+
+    #print(YCbCr)
+
+    return YCbCr
+
+def return_normalized_hist(features, bins_range, nbins = 16):
     hist = []
     features = np.asarray(features)
     length, depth = features.shape
@@ -21,7 +34,7 @@ def return_normalized_hist(features, bins_range, nbins = 32):
 
     return hist
 
-def compute_color_histograms(cloud, using_hsv=True):
+def compute_color_histograms(cloud):
 
     # Compute histograms for the clusters
     point_colors_list = []
@@ -30,10 +43,12 @@ def compute_color_histograms(cloud, using_hsv=True):
     # Step through each point in the point cloud
     for point in points:
         rgb_list = float_to_rgb(point[3])
-        if using_hsv:
-            point_colors_list.append(rgb_to_hsv(rgb_list) * 255)
-        else:
-            point_colors_list.append(rgb_list)
+        #if using_hsv:
+        #    point_colors_list.append(rgb_to_hsv(rgb_list) * 255)
+        #else:
+        #    point_colors_list.append(rgb_list)
+        point_colors_list.append(rgb_to_hsv(rgb_list) * 255)
+        point_colors_list.append(rgb_to_YCbCr(rgb_list))
 
     normed_features = return_normalized_hist(point_colors_list, bins_range = (0,256))
 
@@ -41,6 +56,15 @@ def compute_color_histograms(cloud, using_hsv=True):
 
     return normed_features 
 
+def compute_size_histograms(cloud):
+    points = pc2.read_points(cloud, skip_nans = True)
+
+    points = np.asarray(points[:3][:])
+
+    for point in points:
+        locations = point[0:3]
+
+    pass
 
 def compute_normal_histograms(normal_cloud):
     norm_components = pc2.read_points(normal_cloud,
