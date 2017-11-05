@@ -43,10 +43,6 @@ def compute_color_histograms(cloud):
     # Step through each point in the point cloud
     for point in points:
         rgb_list = float_to_rgb(point[3])
-        #if using_hsv:
-        #    point_colors_list.append(rgb_to_hsv(rgb_list) * 255)
-        #else:
-        #    point_colors_list.append(rgb_list)
         point_colors_list.append(rgb_to_hsv(rgb_list) * 255)
         point_colors_list.append(rgb_to_YCbCr(rgb_list))
 
@@ -55,16 +51,6 @@ def compute_color_histograms(cloud):
     #plot_histogram(normed_features, 'Color Histogram')
 
     return normed_features 
-
-def compute_size_histograms(cloud):
-    points = pc2.read_points(cloud, skip_nans = True)
-
-    points = np.asarray(points[:3][:])
-
-    for point in points:
-        locations = point[0:3]
-
-    pass
 
 def compute_normal_histograms(normal_cloud):
     norm_components = pc2.read_points(normal_cloud,
